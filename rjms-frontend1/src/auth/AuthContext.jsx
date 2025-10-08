@@ -11,8 +11,11 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    if (token) localStorage.setItem('token', token);
-    else localStorage.removeItem('token');
+    if (token) {
+      localStorage.setItem('token', token);
+      // ensure axios default header is set when token exists
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else localStorage.removeItem('token');
   }, [token]);
 
   useEffect(() => {
@@ -20,12 +23,34 @@ export const AuthProvider = ({ children }) => {
     else localStorage.removeItem('user');
   }, [user]);
 
+  // on mount, if a token exists, try to rehydrate the user from /auth/me
+  useEffect(() => {
+    const tryRehydrate = async () => {
+      const t = localStorage.getItem('token');
+      if (!t) return;
+      try {
+        api.defaults.headers.common['Authorization'] = `Bearer ${t}`;
+        const resp = await api.get('/auth/me');
+        setUser(resp.data);
+        setToken(t);
+      } catch (err) {
+        // token invalid or expired — clear it
+        console.debug('Failed to rehydrate user', err);
+        setToken(null);
+        setUser(null);
+      }
+    };
+    tryRehydrate();
+  }, []);
+
   const login = async (email, password) => {
     const resp = await api.post('/auth/login', { email, password });
     // Expect backend to return { token: '...', user: { ... } }
     const { token: t, user: u } = resp.data;
     setToken(t);
     setUser(u);
+    // set axios default Authorization immediately
+    api.defaults.headers.common['Authorization'] = `Bearer ${t}`;
     return resp;
   };
 
@@ -39,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    delete api.defaults.headers.common['Authorization'];
   };
 
   return (

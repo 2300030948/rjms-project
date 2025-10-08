@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import "../App.css"
+import { fetchJournals as apiFetchJournals, createJournal as apiCreateJournal, updateJournal as apiUpdateJournal, deleteJournal as apiDeleteJournal } from "../api/api";
 
 function Journals() {
   const [journals, setJournals] = useState([]);
@@ -9,29 +10,20 @@ function Journals() {
   const [form, setForm] = useState({ id: null, title: "", author: "", publishedDate: "" });
   const [isEditing, setIsEditing] = useState(false);
 
-  const API_URL = "http://localhost:8082/api/journals";
-
-  // Fetch journals
-  const fetchJournals = () => {
-    setLoading(true);
-    fetch(API_URL)
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch journals");
-        return res.json();
-      })
-      .then(data => {
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await apiFetchJournals();
         setJournals(data);
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         toast.error("Error loading journals");
         console.error(err);
+      } finally {
         setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    fetchJournals();
+      }
+    };
+    load();
   }, []);
 
   // Form change handler
@@ -43,25 +35,24 @@ function Journals() {
     const method = isEditing ? "PUT" : "POST";
     const url = isEditing ? `${API_URL}/${form.id}` : API_URL;
 
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to save journal");
-        return res.json();
-      })
-      .then(() => {
-        toast.success(isEditing ? "Journal updated!" : "Journal added!");
+    (async () => {
+      try {
+        if (isEditing) {
+          await apiUpdateJournal(form.id, form);
+          toast.success("Journal updated!");
+        } else {
+          await apiCreateJournal(form);
+          toast.success("Journal added!");
+        }
         setForm({ id: null, title: "", author: "", publishedDate: "" });
         setIsEditing(false);
-        fetchJournals();
-      })
-      .catch(err => {
+        const data = await apiFetchJournals();
+        setJournals(data);
+      } catch (err) {
         toast.error("Error saving journal");
         console.error(err);
-      });
+      }
+    })();
   };
 
   // Edit
@@ -73,16 +64,17 @@ function Journals() {
   // Delete
   const handleDelete = id => {
     if (window.confirm("Delete this journal?")) {
-      fetch(`${API_URL}/${id}`, { method: "DELETE" })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to delete journal");
+      (async () => {
+        try {
+          await apiDeleteJournal(id);
           toast.success("Journal deleted!");
-          fetchJournals();
-        })
-        .catch(err => {
+          const data = await apiFetchJournals();
+          setJournals(data);
+        } catch (err) {
           toast.error("Error deleting journal");
           console.error(err);
-        });
+        }
+      })();
     }
   };
 

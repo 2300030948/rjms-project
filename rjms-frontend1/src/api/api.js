@@ -1,55 +1,52 @@
-// src/api/api.js
+import axios from 'axios';
 
-export const API_BASE_URL = "http://localhost:8082/api/journals";
+const API_ROOT = 'http://localhost:8082/api';
 
-// ✅ Fetch all journals
+const api = axios.create({
+  baseURL: API_ROOT,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Attach token from localStorage for each request (if present)
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
+  return config;
+});
+
+// Helper wrappers matching existing code expectations
 export const fetchJournals = async () => {
-  const response = await fetch(API_BASE_URL);
-  if (!response.ok) throw new Error("Failed to fetch journals");
-  return response.json();
+  const res = await api.get('/journals');
+  return res.data;
 };
 
-// ✅ Fetch a single journal by ID
 export const fetchJournalById = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`);
-  if (!response.ok) throw new Error(`Failed to fetch journal with ID ${id}`);
-  return response.json();
+  const res = await api.get(`/journals/${id}`);
+  return res.data;
 };
 
-// ✅ Create a new journal
 export const createJournal = async (journal) => {
-  const response = await fetch(API_BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(journal),
-  });
-  if (!response.ok) throw new Error("Failed to create journal");
-  return response.json();
+  const res = await api.post('/journals', journal);
+  return res.data;
 };
 
-// ✅ Update an existing journal by ID
 export const updateJournal = async (id, journal) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(journal),
-  });
-  if (!response.ok) throw new Error(`Failed to update journal with ID ${id}`);
-  return response.json();
+  const res = await api.put(`/journals/${id}`, journal);
+  return res.data;
 };
 
-// ✅ Delete a journal by ID
 export const deleteJournal = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) throw new Error(`Failed to delete journal with ID ${id}`);
-  return response.json(); // returns { deleted: true }
+  const res = await api.delete(`/journals/${id}`);
+  return res.data;
 };
 
-// ✅ Optional: Search journals by title or author
 export const searchJournals = async (query) => {
-  const response = await fetch(`${API_BASE_URL}/search?query=${encodeURIComponent(query)}`);
-  if (!response.ok) throw new Error("Failed to search journals");
-  return response.json();
+  const res = await api.get(`/journals/search`, { params: { query } });
+  return res.data;
 };
+
+// Default export axios instance for generic calls like auth
+export default api;
+

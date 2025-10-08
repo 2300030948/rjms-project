@@ -3,6 +3,8 @@ import JournalList from "./components/JournalList.jsx";
 import JournalDetail from "./components/JournalDetail.jsx"; 
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import Login from "./components/Login.jsx";
+import Register from "./components/Register.jsx";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
             <Routes>
               <Route path="/" element={<JournalList />} />
               <Route path="/journals/:id" element={<JournalDetail />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
         </div>

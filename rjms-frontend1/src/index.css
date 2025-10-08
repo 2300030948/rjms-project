@@ -1,0 +1,15 @@
+/* If not using Tailwind via PostCSS, remove @tailwind directives and use regular CSS or import Tailwind's compiled CSS file */
+
+body {
+  padding-top: 70px;
+}
+.container {
+  max-width: 1100px;
+}
+
+/* Alternatively, import Tailwind's compiled CSS if available */
+/* @import 'tailwindcss/dist/tailwind.min.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

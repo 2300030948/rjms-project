@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  rjms-mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: Arjun72
+      MYSQL_DATABASE: research_journal
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Arjun72*
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  rjms-backend:
+    build:
+      context: ./rjms-backend/demo
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rjms-mysql
+
+  rjms-frontend:
+    build:
+      context: ./rjms-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - rjms-backend
+
+volumes:
+  db-data:

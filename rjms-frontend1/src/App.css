@@ -1,0 +1,195 @@
+/* journals.css */
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.search-box input {
+  width: 50%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+form input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+}
+
+form button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.add {
+  background: #2563eb;
+  color: white;
+}
+
+button.cancel {
+  background: #9ca3af;
+  color: white;
+}
+
+button.edit {
+  background: #facc15;
+  color: black;
+}
+
+button.delete {
+  background: #dc2626;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+th {
+  background: #2563eb;
+  color: white;
+}
+
+
+/* Navbar Styles */
+.navbar {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+
+.navbar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937; /* Tailwind's gray-800 */
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-user {
+  color: #6b7280; /* Tailwind's gray-500 */
+}
+
+.navbar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb; /* Tailwind's gray-200 */
+}
+
+
+/* ===== Header Styles ===== */
+.1header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 12px 0;
+  z-index: 1000;
+}
+
+.1header-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.1brand {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.n1av-links,
+.a1uth-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.n1av-links a,
+.a1uth-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+}
+
+.n1av-links a:hover,
+.a1uth-links a:hover {
+  color: #007bff;
+}
+
+.w1elcome {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.l1ogout-btn {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #6c757d;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.l1ogout-btn:hover {
+  background: #6c757d;
+  color: #fff;
+}
